@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import UserCard from './UserCard'
 
 
 const SearchBar = () => {
@@ -16,6 +17,7 @@ const SearchBar = () => {
 
         const timer = setTimeout(()=>{
             fetchData(user)
+            setUser("")
         } , 1000)
         
         return ()=>clearTimeout(timer)
@@ -40,11 +42,13 @@ const SearchBar = () => {
             setLoading(false)
         }
     }
-    if (error) return <p>{error}</p>
-    if (loading) return <p>Loading....</p>
+    
   return (
     <div>
       <input type="text" placeholder='Type a Git user name' onChange={(e)=>handleChange(e)} value={user} />
+     {loading && <p>Loading.....</p>}
+     {error && <p>{error}</p>}
+      {!loading && !error && <UserCard data={data} />}
     </div>
   )
 }
