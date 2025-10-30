@@ -46,17 +46,21 @@ const SearchBar = () => {
     }
     const handlePrev =()=>{
         if(page>1){
-            setPage((prev)=>prev+1)
+            setPage((prev)=>prev-1)
         }
+    }
+    const handleNext =()=>{
+            setPage((prev)=>prev+1)
     }
   return (
     <div>
       <input type="text" placeholder='Type a Git user name' onChange={(e)=>handleChange(e)} value={user} />
      {loading && <p>Loading.....</p>}
      {error && <p>{error}</p>}
-      {!loading && !error && <UserCard data={data} />}
-      <button onClick={()=>setPage(page-1)}>prev</button>
-      <button onClick={()=>setPage(page+1)}>Next</button>
+      {!loading && !error && data.length >0 && <UserCard data={data} />}
+      <button disabled={page==1} onClick={handlePrev}>prev</button>
+      <span>{page}</span>
+      <button onClick={handleNext}>Next</button>
       
     </div>
   )
