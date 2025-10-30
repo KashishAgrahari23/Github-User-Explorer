@@ -7,6 +7,7 @@ const SearchBar = () => {
     const [ data , setData] = useState([])
     const [error , setError] = useState(null)
     const [loading , setLoading] = useState(false)
+    const [page , setPage] = useState(1)
     
     useEffect(()=>{
 
@@ -17,22 +18,23 @@ const SearchBar = () => {
 
         const timer = setTimeout(()=>{
             fetchData(user)
-            setUser("")
+            // setUser("")
         } , 1000)
         
         return ()=>clearTimeout(timer)
 
-},[user])
+},[user , page])
 
     const handleChange=(e)=>{
         setUser(e.target.value)
+        setPage(1)
     }
 
     const fetchData= async(query)=>{
         try{
             setLoading(true)
             setError(null)
-            const res = await fetch(`https://api.github.com/search/users?q=${query}`)
+            const res = await fetch(`https://api.github.com/search/users?q=${query}&page=${page}&per_page=10`)
              const jsonData = await res.json()
              setData(jsonData.items || [])
              console.log(jsonData.items)
@@ -42,13 +44,20 @@ const SearchBar = () => {
             setLoading(false)
         }
     }
-    
+    const handlePrev =()=>{
+        if(page>1){
+            setPage((prev)=>prev+1)
+        }
+    }
   return (
     <div>
       <input type="text" placeholder='Type a Git user name' onChange={(e)=>handleChange(e)} value={user} />
      {loading && <p>Loading.....</p>}
      {error && <p>{error}</p>}
       {!loading && !error && <UserCard data={data} />}
+      <button onClick={()=>setPage(page-1)}>prev</button>
+      <button onClick={()=>setPage(page+1)}>Next</button>
+      
     </div>
   )
 }
