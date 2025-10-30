@@ -1,16 +1,21 @@
 import React, { useEffect, useState } from "react";
 
-const ViewDetail = (user) => {
-    const [res,setRes] = useState([])
-  useEffect(
-    (user) => {
-      let data = fetch(`https://api.github.com/users/${user}/repos`);
-      let res = data.json();
-      console.log(res.data);
-      setRes(res.data)
-    },
-    [user]
-  );
+const ViewDetail = ({ user }) => {
+  const [res, setRes] = useState([]);
+  useEffect(() => {
+    const fetchDetail = async () => {
+      try {
+        let data = await fetch(`https://api.github.com/users/${user}/repos`);
+        let res = await data.json();
+        console.log(res);
+        setRes(res);
+      } catch (error) {
+        console.error(error);
+      }
+      
+    };
+    fetchDetail();
+  }, [user]);
 
   return (
     <div>
