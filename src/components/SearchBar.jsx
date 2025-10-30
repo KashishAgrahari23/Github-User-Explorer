@@ -39,6 +39,7 @@ const SearchBar = () => {
              setData(jsonData.items || [])
              console.log(jsonData.items)
         }catch(err){
+            
             setError(err.message)
         }finally{
             setLoading(false)
