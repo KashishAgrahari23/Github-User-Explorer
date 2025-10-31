@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const ViewDetail = () => {
   const [result, setResult] = useState([]);
   const { user } = useParams();
+  const navigate = useNavigate()
   useEffect(() => {
     const fetchDetail = async () => {
       try {
@@ -19,11 +20,25 @@ const ViewDetail = () => {
     fetchDetail();
   }, [user]);
 
+
+  const handleBack=()=>{
+        navigate(-1)
+
+  }
+
   return (
     <div className="min-h-screen bg-gray-900 text-white p-8">
       <h1 className="text-3xl font-bold text-center mb-8 text-blue-400">
-        detail page of {user}
+         {user} Info
       </h1>
+      <div className="flex justify-center mb-6">
+        <button
+          onClick={handleBack}
+          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+        >
+          ← Back
+        </button>
+      </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {result.length === 0 && (
