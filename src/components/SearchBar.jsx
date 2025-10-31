@@ -54,15 +54,16 @@ const SearchBar = () => {
             setPage((prev)=>prev+1)
     }
   return (
-    <div className='min-h-screen bg-gray-100 flex flex-col items-center p-6'>
+    <div className='min-h-screen bg-gray-900 flex flex-col items-center p-6'>
       <input type="text" placeholder='Type a Git user name' onChange={(e)=>handleChange(e)} value={user} className='border border-gray-300 rounded-lg px-4 py-2 w-80 focus:ring-2 focus:ring-blue-500 shadow-sm' />
      {loading && <p>Loading.....</p>}
      {error && <p>{error}</p>}
       {!loading && !error && data.length >0 && <UserCard data={data} />}
-      <button disabled={page==1} onClick={handlePrev}>prev</button>
+      <span>
+      <button disabled={page==1} onClick={handlePrev} className='bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50 transition" >Prev</button>
       <span>{page}</span>
-      <button onClick={handleNext} className='bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition'>Next</button>
-      
+      <button onClick={handleNext} className='bg-red-600 text-red-400 px-4 py-2 rounded-lg hover:bg-blue-700 transition'>Next</button>
+      </span>
     </div>
   )
 }
