@@ -1,14 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState , useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 const ViewDetail = () => {
   const [result, setResult] = useState([]);
   const { user } = useParams();
   const navigate = useNavigate()
+  const loaderRef = useRef()
+  
+    useEffect(()=>{
+      const observer = new IntersectionObserver((entries)=>{
+          const first = entries[0]
+          if (first.isIntersecting) setPage((prev)=>prev+1)
+      })
+      if(loaderRef.current) observer.observe(loaderRef.current)
+  
+      return ()=> observer.disconnect()
+    },[])
   useEffect(() => {
     const fetchDetail = async () => {
       try {
-        console.log(user);
+        console.log( "detail" ,  user);
         let data = await fetch(`https://api.github.com/users/${user}/repos`);
         let res = await data.json();
         console.log(res);
@@ -63,6 +74,9 @@ const ViewDetail = () => {
           </div>
         ))}
       </div>
+      <div ref={loaderRef} className="text-center p-4 text-gray-400">
+  Loading more...
+</div>
     </div>
   );
 };

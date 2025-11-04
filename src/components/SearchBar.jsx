@@ -8,6 +8,8 @@ const SearchBar = () => {
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
 
+  
+
   useEffect(() => {
     if (!user.trim()) {
       setData([]);
@@ -20,6 +22,7 @@ const SearchBar = () => {
     }, 1000);
 
     return () => clearTimeout(timer);
+
   }, [user, page]);
 
   const handleChange = (e) => {
@@ -73,6 +76,9 @@ const SearchBar = () => {
           <UserCard data={data} />
         </div> : <p>No user found</p>
       }
+
+      
+
       <div className="container mx-auto px-4">
           <UserCard data={data} />
         </div>
