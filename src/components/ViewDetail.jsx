@@ -1,47 +1,63 @@
-import React, { useEffect, useState , useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 const ViewDetail = () => {
   const [result, setResult] = useState([]);
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
+
   const { user } = useParams();
-  const navigate = useNavigate()
-  const loaderRef = useRef()
-  
-    useEffect(()=>{
-      const observer = new IntersectionObserver((entries)=>{
-          const first = entries[0]
-          if (first.isIntersecting) setPage((prev)=>prev+1)
-      })
-      if(loaderRef.current) observer.observe(loaderRef.current)
-  
-      return ()=> observer.disconnect()
-    },[])
+  const navigate = useNavigate();
+  const loaderRef = useRef(null);
+
+  // Setup intersection observer
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      const first = entries[0];
+      if (first.isIntersecting) {
+        setPage((prev) => prev + 1);
+      }
+    });
+
+    const currentLoader = loaderRef.current;
+    if (currentLoader) observer.observe(currentLoader);
+
+    return () => {
+      if (currentLoader) observer.unobserve(currentLoader);
+    };
+  }, []);
+
   useEffect(() => {
     const fetchDetail = async () => {
       try {
-        console.log( "detail" ,  user);
-        let data = await fetch(`https://api.github.com/users/${user}/repos`);
-        let res = await data.json();
-        console.log(res);
-        setResult(res);
+        setLoading(true);
+        const data = await fetch(
+          `https://api.github.com/users/${user}/repos?page=${page}&per_page=10`
+        );
+        const res = await data.json();
+
+        // Append new results instead of replacing
+        setResult((prev) => [...prev, ...res]);
       } catch (error) {
         console.error(error);
+      } finally {
+        setLoading(false);
       }
     };
+
     fetchDetail();
-  }, [user]);
+  }, [user, page]);
 
-
-  const handleBack=()=>{
-        navigate(-1)
-
-  }
+  const handleBack = () => {
+    navigate(-1);
+  };
 
   return (
     <div className="min-h-screen bg-gray-900 text-white p-8">
       <h1 className="text-3xl font-bold text-center mb-8 text-blue-400">
-         {user} Info
+        {user} Info
       </h1>
+
       <div className="flex justify-center mb-6">
         <button
           onClick={handleBack}
@@ -52,11 +68,6 @@ const ViewDetail = () => {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-        {result.length === 0 && (
-          <p className="text-center text-gray-400 mt-10">
-            No repositories found for this user.
-          </p>
-        )}
         {result.map((elem) => (
           <div
             key={elem.id}
@@ -74,9 +85,12 @@ const ViewDetail = () => {
           </div>
         ))}
       </div>
-      <div ref={loaderRef} className="text-center p-4 text-gray-400">
-  Loading more...
-</div>
+
+      {loading && (
+        <p className="text-center text-gray-400 mt-4">Loading more...</p>
+      )}
+
+      <div ref={loaderRef} className="h-10">end</div>
     </div>
   );
 };
