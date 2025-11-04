@@ -62,11 +62,20 @@ const SearchBar = () => {
       />
       {loading && <p>Loading.....</p>}
       {error && <p>{error}</p>}
-      {!loading && !error && data.length > 0 && (
+      {/* {!loading && !error && data.length > 0 && (
         <div className="container mx-auto px-4">
           <UserCard data={data} />
         </div>
-      )}
+      )} */}
+
+      {
+        data.length ? <div className="container mx-auto px-4">
+          <UserCard data={data} />
+        </div> : <p>No user found</p>
+      }
+      <div className="container mx-auto px-4">
+          <UserCard data={data} />
+        </div>
       <span className="items-center gap-4 mt-6">
         <button
           disabled={page == 1}
