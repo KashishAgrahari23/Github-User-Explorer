@@ -19,12 +19,9 @@ const ViewDetail = () => {
       }
     });
 
-    const currentLoader = loaderRef.current;
-    if (currentLoader) observer.observe(currentLoader);
+    if (loaderRef.current) observer.observe(loaderRef.current);
 
-    return () => {
-      if (currentLoader) observer.unobserve(currentLoader);
-    };
+    return () => observer.disconnect()
   }, []);
 
   useEffect(() => {
