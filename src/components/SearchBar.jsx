@@ -58,13 +58,16 @@ const SearchBar = () => {
     setPage((prev) => prev + 1);
   };
 
+useEffect(()=>{
+    const newSearch = JSON.parse(localStorage.getItem("recent") ) || []
+    setRecent(newSearch)
+},[])
+
   const saveRecent = ((query)=>{
         console.log(query)
         setRecent((prev)=> {
             localStorage.setItem("recent" , JSON.stringify([query , ...prev]))
             return [query , ...prev]
-
-
         } )
         
   })
@@ -82,8 +85,7 @@ const SearchBar = () => {
       {loading && <p>Loading.....</p>}
       {error && <p>{error}</p>}
     {
-        recent.map((elem,id)=>{
-            
+        recent.map((elem,id)=>{   
             return(
                 <div>
                 
