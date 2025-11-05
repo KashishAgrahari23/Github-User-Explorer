@@ -86,21 +86,27 @@ const SearchBar = () => {
       {loading && <p>Loading.....</p>}
       {error && <p>{error}</p>}
       {recent.length > 0 && (
-        <div className="mt-4 text-gray-200 text-center">
-          <h5 className="font-semibold mb-2 text-lg">Recent Searches</h5>
-          <div className="flex flex-wrap gap-2 justify-center">
-            {recent.map((item, id) => (
-              <button
-                key={id}
-                onClick={() => handleRecent(item)}
-                className="bg-gray-700 px-3 py-1 rounded-lg hover:bg-gray-600 transition"
-              >
-                {item}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
+  <div className="mt-6 w-full max-w-md text-gray-200">
+    <h5 className="font-semibold text-lg mb-3 text-center text-blue-400">
+      Recent Searches
+    </h5>
+
+    <div className="flex flex-wrap gap-2 justify-center">
+      {recent.map((item, id) => (
+        <p
+          key={id}
+          onClick={() => handleRecent(item)}
+          className="px-4 py-2 rounded-full bg-gray-800 text-sm hover:bg-gray-900 transition-all duration-300 border border-gray-700"
+        >
+          {item.length > 15 ? item.slice(0, 15) + "..." : item}
+        </p>
+      ))}
+    </div>
+
+    <div className="mt-4 border-b border-gray-700 w-full"></div>
+  </div>
+)}
+
 
       {/* {!loading && !error && data.length > 0 && (
         <div className="container mx-auto px-4">
