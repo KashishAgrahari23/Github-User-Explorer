@@ -7,9 +7,7 @@ const SearchBar = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
-  const [recent , setRecent] = useState([])
-
-  
+  const [recent, setRecent] = useState([]);
 
   useEffect(() => {
     if (!user.trim()) {
@@ -23,7 +21,6 @@ const SearchBar = () => {
     }, 1000);
 
     return () => clearTimeout(timer);
-
   }, [user, page]);
 
   const handleChange = (e) => {
@@ -40,9 +37,8 @@ const SearchBar = () => {
       );
       const jsonData = await res.json();
       setData(jsonData.items || []);
-    //   console.log(jsonData.items);
-    saveRecent(query)
-    
+      //   console.log(jsonData.items);
+      saveRecent(query);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -58,19 +54,24 @@ const SearchBar = () => {
     setPage((prev) => prev + 1);
   };
 
-useEffect(()=>{
-    const newSearch = JSON.parse(localStorage.getItem("recent") ) || []
-    setRecent(newSearch)
-},[])
+  useEffect(() => {
+    const newSearch = JSON.parse(localStorage.getItem("recent")) || [];
+    setRecent(newSearch);
+  }, []);
 
-  const saveRecent = ((query)=>{
-        console.log(query)
-        setRecent((prev)=> {
-            localStorage.setItem("recent" , JSON.stringify([query , ...prev]))
-            return [query , ...prev]
-        } )
-        
-  })
+  const saveRecent = (query) => {
+    console.log(query);
+    setRecent((prev) => {
+        const newData = [query , ...prev.filter((el)=> el!=query)]
+      localStorage.setItem("recent", JSON.stringify(newData));
+      return newData
+    });
+  };
+
+  const handleRecent = (user) => {
+    setUser(user);
+    fetchData(user);
+  };
 
   return (
     <div className="min-h-screen bg-gray-900 flex flex-col  items-center p-6 text-white">
@@ -84,17 +85,22 @@ useEffect(()=>{
 
       {loading && <p>Loading.....</p>}
       {error && <p>{error}</p>}
-    {
-        recent.map((elem,id)=>{   
-            return(
-                <div>
-                
-                <p key={id}>
-                    {elem}
-                </p></div>
-            )
-        })
-    }
+      {recent.length > 0 && (
+        <div className="mt-4 text-gray-200 text-center">
+          <h5 className="font-semibold mb-2 text-lg">Recent Searches</h5>
+          <div className="flex flex-wrap gap-2 justify-center">
+            {recent.map((item, id) => (
+              <button
+                key={id}
+                onClick={() => handleRecent(item)}
+                className="bg-gray-700 px-3 py-1 rounded-lg hover:bg-gray-600 transition"
+              >
+                {item}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* {!loading && !error && data.length > 0 && (
         <div className="container mx-auto px-4">
@@ -102,17 +108,14 @@ useEffect(()=>{
         </div>
       )} */}
 
-      {
-        data.length ? <div className="container mx-auto px-4">
-          <UserCard data={data} />
-        </div> : <p>No user found</p>
-      }
-
-      
-
-      <div className="container mx-auto px-4">
+      {data.length ? (
+        <div className="container mx-auto px-4">
           <UserCard data={data} />
         </div>
+      ) : (
+        <p>No user found</p>
+      )}
+
       <span className="items-center gap-4 mt-6">
         <button
           disabled={page == 1}
