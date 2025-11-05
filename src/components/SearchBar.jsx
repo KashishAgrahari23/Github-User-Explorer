@@ -7,6 +7,7 @@ const SearchBar = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
+  const [recent , setRecent] = useState([])
 
   
 
@@ -39,7 +40,11 @@ const SearchBar = () => {
       );
       const jsonData = await res.json();
       setData(jsonData.items || []);
-      console.log(jsonData.items);
+      console.log(query)
+      setRecent(query)
+      localStorage.setItem("recent" , recent)
+    //   console.log(jsonData.items);
+    
     } catch (err) {
       setError(err.message);
     } finally {
@@ -55,7 +60,7 @@ const SearchBar = () => {
     setPage((prev) => prev + 1);
   };
   return (
-    <div className="min-h-screen bg-gray-900 flex flex-col justify-center items-center p-6 text-white">
+    <div className="min-h-screen bg-gray-900 flex flex-col  items-center p-6 text-white">
       <input
         type="text"
         placeholder="Type a Git user name"
@@ -63,8 +68,12 @@ const SearchBar = () => {
         value={user}
         className="border border-gray-300 rounded-lg px-4 py-2 w-80 focus:ring-2 focus:ring-blue-500 shadow-sm"
       />
+
       {loading && <p>Loading.....</p>}
       {error && <p>{error}</p>}
+
+    
+
       {/* {!loading && !error && data.length > 0 && (
         <div className="container mx-auto px-4">
           <UserCard data={data} />
