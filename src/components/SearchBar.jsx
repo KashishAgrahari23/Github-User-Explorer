@@ -40,10 +40,8 @@ const SearchBar = () => {
       );
       const jsonData = await res.json();
       setData(jsonData.items || []);
-      console.log(query)
-      setRecent(query)
-      localStorage.setItem("recent" , recent)
     //   console.log(jsonData.items);
+    saveRecent(query)
     
     } catch (err) {
       setError(err.message);
@@ -59,6 +57,21 @@ const SearchBar = () => {
   const handleNext = () => {
     setPage((prev) => prev + 1);
   };
+
+  const saveRecent = ((query)=>{
+        console.log(query)
+        setRecent((prev)=> {
+            
+            [query , ...prev]
+            localStorage.setItem("recent" , JSON.stringify([query , ...prev]))
+            return [query , ...prev]
+
+
+        } )
+        
+  })
+
+
   return (
     <div className="min-h-screen bg-gray-900 flex flex-col  items-center p-6 text-white">
       <input
