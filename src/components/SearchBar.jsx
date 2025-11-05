@@ -61,8 +61,6 @@ const SearchBar = () => {
   const saveRecent = ((query)=>{
         console.log(query)
         setRecent((prev)=> {
-            
-            [query , ...prev]
             localStorage.setItem("recent" , JSON.stringify([query , ...prev]))
             return [query , ...prev]
 
@@ -70,7 +68,6 @@ const SearchBar = () => {
         } )
         
   })
-
 
   return (
     <div className="min-h-screen bg-gray-900 flex flex-col  items-center p-6 text-white">
@@ -84,8 +81,18 @@ const SearchBar = () => {
 
       {loading && <p>Loading.....</p>}
       {error && <p>{error}</p>}
-
-    
+    {
+        recent.map((elem,id)=>{
+            
+            return(
+                <div>
+                
+                <p key={id}>
+                    {elem}
+                </p></div>
+            )
+        })
+    }
 
       {/* {!loading && !error && data.length > 0 && (
         <div className="container mx-auto px-4">
